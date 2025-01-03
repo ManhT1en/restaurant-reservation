@@ -1,7 +1,6 @@
 package com.example.user_service.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -10,10 +9,11 @@ public class LoginController {
 
     @GetMapping("/login")
     public String loginPage(HttpServletRequest request) {
+        // Lưu URL cần redirect sau khi đăng nhập (nếu có)
         String redirectUrl = request.getParameter("redirect");
-        if (redirectUrl != null) {
+        if (redirectUrl != null && !redirectUrl.isEmpty()) {
             request.getSession().setAttribute("redirect_url", redirectUrl);
         }
-        return "login";
+        return "login"; // Trả về file login.html trong thư mục templates
     }
 }

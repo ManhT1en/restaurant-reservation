@@ -17,24 +17,16 @@ public class SecurityConfig {
         http
             .csrf().disable()
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/login", "/error").permitAll()
-                .anyRequest().authenticated()
+                .requestMatchers("/login", "/error").permitAll() // Cho phép không xác thực với /login và /error
+                .anyRequest().authenticated() // Các URL khác yêu cầu đăng nhập
             )
             .formLogin(login -> login
-                .loginPage("/login")
-                .successHandler((request, response, authentication) -> {
-                    String redirectUrl = (String) request.getSession().getAttribute("redirect_url");
-                    if (redirectUrl != null) {
-                        request.getSession().removeAttribute("redirect_url");
-                        response.sendRedirect(redirectUrl); // Chuyển hướng về URL gốc
-                    } else {
-                        response.sendRedirect("/home"); // Chuyển hướng mặc định
-                    }
-                })
-                .permitAll()
+                .loginPage("/login") // Trang login tùy chỉnh
+                .defaultSuccessUrl("/home", true) // Chuyển hướng mặc định sau khi login thành công
+                .permitAll() // Không yêu cầu xác thực tại /login
             )
             .logout(logout -> logout
-                .logoutSuccessUrl("/login?logout")
+                .logoutSuccessUrl("/login?logout") // Chuyển hướng khi logout thành công
                 .permitAll()
             );
 
@@ -43,7 +35,6 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return NoOpPasswordEncoder.getInstance(); // Không mã hóa mật khẩu
+        return NoOpPasswordEncoder.getInstance(); // Sử dụng mật khẩu không mã hóa
     }
 }
-

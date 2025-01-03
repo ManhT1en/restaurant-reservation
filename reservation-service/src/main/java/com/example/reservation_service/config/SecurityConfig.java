@@ -13,18 +13,22 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+            .csrf().disable()
             .authorizeHttpRequests(auth -> auth
-                .anyRequest().authenticated() // Bắt buộc đăng nhập cho mọi endpoint
+                .requestMatchers("/home", "/error").permitAll()
+                .anyRequest().authenticated()
             )
             .formLogin(login -> login
-                .loginPage("http://localhost:8081/login") // Chuyển hướng tới User Service
+            .loginPage("http://localhost:8081/login?redirect=http://localhost:8083/home")// Đặt redirect về Restaurant Service
                 .permitAll()
             )
             .logout(logout -> logout
-                .logoutSuccessUrl("http://localhost:8081/logout") // Chuyển hướng tới logout ở User Service
+                .logoutSuccessUrl("http://localhost:8081/logout")
                 .permitAll()
             );
+
         return http.build();
     }
 }
+
 

@@ -1,10 +1,30 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Home Page</title>
+    <title>Home</title>
 </head>
 <body>
-    <h1>Welcome!</h1>
-    <p th:text="'Hello, ' + ${username} + '!'"></p>
+    <h1>Welcome to User Service</h1>
+
+    <!-- Kiểm tra người dùng đã đăng nhập -->
+    <p th:if="${#authentication != null}">
+        You are logged in as: <strong th:text="${#authentication.name}"></strong>
+    </p>
+    <p th:if="${#authentication == null}">
+        You are not logged in.
+    </p>
+
+    <!-- Liên kết đến các service khác -->
+    <nav>
+        <ul>
+            <li><a href="http://localhost:8082/home" target="_blank">Go to Restaurant Service</a></li>
+            <li><a href="http://localhost:8083/home" target="_blank">Go to Reservation Service</a></li>
+        </ul>
+    </nav>
+
+    <!-- Đăng xuất -->
+    <form th:action="@{/logout}" method="post">
+        <button type="submit">Logout</button>
+    </form>
 </body>
 </html>
